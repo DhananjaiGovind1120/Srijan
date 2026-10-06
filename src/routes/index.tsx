@@ -58,8 +58,8 @@ function Home() {
               <img key={s.label} src={s.img} alt={s.line} width={1280} height={1600} className={`absolute inset-0 h-full w-full object-cover transition-opacity duration-1000 ${k === i ? "opacity-100" : "opacity-0"}`} />
             ))}
             <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-background/90 to-transparent p-6">
-              <p className="text-xs uppercase tracking-widest text-primary">{slides[i].label}</p>
-              <p className="font-display text-2xl">{slides[i].line}</p>
+              <p className="text-xs uppercase tracking-widest text-primary">{slides[i]!.label}</p>
+              <p className="font-display text-2xl">{slides[i]!.line}</p>
               <div className="mt-3 flex gap-2">
                 {slides.map((s, k) => <button key={s.label} aria-label={s.label} onClick={() => setI(k)} className={`h-1 w-8 ${k === i ? "bg-primary" : "bg-foreground/30"}`} />)}
               </div>
@@ -102,10 +102,10 @@ function Home() {
             </div>
           </div>
           <div key={f} className="animate-rise">
-            <h2 className="text-5xl md:text-6xl">{festivals[f].name}</h2>
-            <p className="mt-3 font-hand text-3xl text-primary">{festivals[f].note}</p>
-            <p className="mt-4 max-w-lg">{festivals[f].text}</p>
-            <Link to="/shop" className="mt-8 inline-flex rounded-sm bg-cream-foreground px-6 py-3 text-sm text-cream">See the {festivals[f].name} edit</Link>
+            <h2 className="text-5xl md:text-6xl">{festivals[f]!.name}</h2>
+            <p className="mt-3 font-hand text-3xl text-primary">{festivals[f]!.note}</p>
+            <p className="mt-4 max-w-lg">{festivals[f]!.text}</p>
+            <Link to="/shop" className="mt-8 inline-flex rounded-sm bg-cream-foreground px-6 py-3 text-sm text-cream">See the {festivals[f]!.name} edit</Link>
           </div>
         </div>
       </section>
@@ -116,7 +116,7 @@ function Home() {
           <Link to="/shop" className="text-sm text-primary">View all →</Link>
         </div>
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {[products[0], products[3], products[6]].map((p) => <ProductCard key={p.id} p={p} />)}
+          {[products[0]!, products[3]!, products[6]!].map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
       </section>
     </>
