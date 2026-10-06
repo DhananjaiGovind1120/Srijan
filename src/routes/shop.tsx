@@ -7,7 +7,7 @@ type Search = { c?: Category };
 
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): Search => {
-    const c = s.c as string;
+    const c = s["c"] as string;
     return c === "clothing" || c === "jewellery" || c === "coffee" ? { c } : {};
   },
   head: () => ({
