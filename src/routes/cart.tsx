@@ -17,10 +17,12 @@ export const Route = createFileRoute("/cart")({
 });
 
 const FREE = 2500;
+const WEBHOOK_URL = "https://hook.eu2.make.com/tl7wfvuupitpmdq3lkjwfp8jl68o1k5x";
 
 function Cart() {
   const { lines, setQty, clear } = useCart();
   const [done, setDone] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const items = lines.map((l) => ({ ...l, p: getProduct(l.id)! })).filter((x) => x.p);
   const total = items.reduce((s, x) => s + x.p.price * x.qty, 0);
 
@@ -50,17 +52,43 @@ function Cart() {
         </div>
         <form
           className="h-fit space-y-4 rounded-sm border bg-card p-6"
-          onSubmit={(e) => { e.preventDefault(); clear(); setDone(true); }}
+          onSubmit={async (e) => {
+            e.preventDefault();
+            setIsLoading(true);
+            const formData = new FormData(e.currentTarget);
+            const orderData = {
+              items: items.map(({ p, qty }) => ({ id: p.id, name: p.name, price: p.price, quantity: qty })),
+              total,
+              customerName: formData.get("name"),
+              phone: formData.get("phone"),
+              giftMessage: formData.get("giftMessage"),
+              promoCode: formData.get("promoCode"),
+              timestamp: new Date().toISOString(),
+            };
+            try {
+              await fetch(WEBHOOK_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(orderData),
+              });
+            } catch (err) {
+              console.error("Webhook error:", err);
+            } finally {
+              clear();
+              setDone(true);
+              setIsLoading(false);
+            }
+          }}
         >
           <p className="text-sm text-muted-foreground">
             {total >= FREE ? "✦ You've unlocked free shipping" : `Add ${formatINR(FREE - total)} more for free shipping`}
           </p>
-          <input placeholder="Promo code" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
-          <textarea placeholder="Gift message (we'll handwrite it!)" className="w-full rounded-sm border bg-transparent px-3 py-2 font-hand text-lg" rows={3} />
-          <input required placeholder="Your name" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
-          <input required type="tel" placeholder="Phone" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
+          <input name="promoCode" placeholder="Promo code" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
+          <textarea name="giftMessage" placeholder="Gift message (we'll handwrite it!)" className="w-full rounded-sm border bg-transparent px-3 py-2 font-hand text-lg" rows={3} />
+          <input required name="name" placeholder="Your name" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
+          <input required name="phone" type="tel" placeholder="Phone" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
           <div className="flex justify-between border-t pt-4 text-lg"><span>Total</span><span>{formatINR(total)}</span></div>
-          <button disabled={!items.length} className="w-full rounded-sm bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40">Place order request</button>
+          <button disabled={!items.length || isLoading} className="w-full rounded-sm bg-primary py-3 text-sm font-medium text-primary-foreground disabled:opacity-40">{isLoading ? "Processing..." : "Place order request"}</button>
         </form>
       </div>
     </>
