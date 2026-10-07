@@ -17,7 +17,7 @@ export const Route = createFileRoute("/cart")({
 });
 
 const FREE = 2500;
-const WEBHOOK_URL = "https://hook.eu2.make.com/9lpv0g2g44tbgmb8j2ei87flmtyirpig";
+const WEBHOOK_URL = "https://hook.eu2.make.com/w6wqb9tu5fu8hxbmugcdrhcch4uslwaf";
 
 function Cart() {
   const { lines, setQty, clear } = useCart();
