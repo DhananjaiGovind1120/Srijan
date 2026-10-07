@@ -2,7 +2,7 @@
 
 Implement exactly the screenshot and nothing else
 
-This project was built with [Lovable](https://lovable.dev).
+This project was built with (https://lovable.dev).
 
 **Live app**: https://snapshot-and-render.lovable.app
 
