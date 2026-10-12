@@ -1,6 +1,6 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { ShoppingBag, MapPin, Menu, X, Heart } from "lucide-react";
+import { ShoppingBag, MapPin, Menu, X, Heart, Search } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatINR, type Product } from "@/lib/products";
 
@@ -24,6 +24,17 @@ export function Logo() {
 export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const navigate = useNavigate();
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchInput.trim()) {
+      navigate({ to: "/search", search: { q: searchInput } });
+      setSearchInput("");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
       <div className="bg-cream text-cream-foreground">
@@ -32,15 +43,27 @@ export function SiteHeader() {
           <Link to="/contact" className="hidden items-center gap-1 sm:flex"><MapPin className="h-3 w-3" /> Store: Arera Colony, Bhopal</Link>
         </div>
       </div>
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4">
+      <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 gap-4">
         <Logo />
-        <nav className="hidden gap-8 text-sm md:flex">
+        <nav className="hidden gap-8 text-sm md:flex flex-1">
           {nav.map((n) => (
             <Link key={n.to} to={n.to} className="text-muted-foreground transition-colors hover:text-foreground" activeProps={{ className: "text-primary" }} activeOptions={{ exact: true }}>
               {n.label}
             </Link>
           ))}
         </nav>
+        <form onSubmit={handleSearch} className="hidden md:flex items-center gap-2 flex-1 max-w-xs">
+          <input
+            type="text"
+            value={searchInput}
+            onChange={(e) => setSearchInput(e.target.value)}
+            placeholder="Search products..."
+            className="flex-1 rounded-sm border bg-transparent px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+          />
+          <button type="submit" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Search">
+            <Search className="h-5 w-5" />
+          </button>
+        </form>
         <div className="flex items-center gap-4">
           <Link to="/cart" className="relative" aria-label="Cart">
             <ShoppingBag className="h-5 w-5" />
@@ -52,6 +75,18 @@ export function SiteHeader() {
       {open && (
         <nav className="flex flex-col gap-4 border-t px-6 py-4 md:hidden">
           {nav.map((n) => <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>{n.label}</Link>)}
+          <form onSubmit={handleSearch} className="flex items-center gap-2 mt-4">
+            <input
+              type="text"
+              value={searchInput}
+              onChange={(e) => setSearchInput(e.target.value)}
+              placeholder="Search products..."
+              className="flex-1 rounded-sm border bg-transparent px-3 py-2 text-sm outline-none focus:ring-1 focus:ring-primary"
+            />
+            <button type="submit" className="text-muted-foreground hover:text-foreground transition-colors" aria-label="Search">
+              <Search className="h-5 w-5" />
+            </button>
+          </form>
         </nav>
       )}
     </header>
