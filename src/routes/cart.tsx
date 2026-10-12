@@ -18,7 +18,6 @@ export const Route = createFileRoute("/cart")({
 });
 
 const FREE = 2500;
-const WEBHOOK_URL = "https://hook.eu2.make.com/w6wqb9tu5fu8hxbmugcdrhcch4uslwaf";
 
 function Cart() {
   const { lines, setQty, clear } = useCart();
@@ -62,16 +61,6 @@ function Cart() {
             const giftMessage = formData.get("giftMessage") as string;
             const promoCode = formData.get("promoCode") as string;
 
-            const orderData = {
-              items: items.map(({ p, qty }) => ({ id: p.id, name: p.name, price: p.price, quantity: qty })),
-              total,
-              customerName,
-              phone,
-              giftMessage,
-              promoCode,
-              timestamp: new Date().toISOString(),
-            };
-
             try {
               // Save to Supabase
               const { data: order, error: orderError } = await supabase
@@ -106,13 +95,6 @@ function Cart() {
 
                 if (itemsError) throw itemsError;
               }
-
-              // Send to Make.com webhook
-              await fetch(WEBHOOK_URL, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(orderData),
-              });
             } catch (err) {
               console.error("Order error:", err);
             } finally {
