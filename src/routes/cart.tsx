@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useCart } from "@/lib/cart";
 import { getProduct, formatINR } from "@/lib/products";
 import { PageTitle } from "@/components/site";
+import { supabase } from "@/lib/supabase";
 
 export const Route = createFileRoute("/cart")({
   head: () => ({
@@ -56,23 +57,64 @@ function Cart() {
             e.preventDefault();
             setIsLoading(true);
             const formData = new FormData(e.currentTarget);
+            const customerName = formData.get("name") as string;
+            const phone = formData.get("phone") as string;
+            const giftMessage = formData.get("giftMessage") as string;
+            const promoCode = formData.get("promoCode") as string;
+
             const orderData = {
               items: items.map(({ p, qty }) => ({ id: p.id, name: p.name, price: p.price, quantity: qty })),
               total,
-              customerName: formData.get("name"),
-              phone: formData.get("phone"),
-              giftMessage: formData.get("giftMessage"),
-              promoCode: formData.get("promoCode"),
+              customerName,
+              phone,
+              giftMessage,
+              promoCode,
               timestamp: new Date().toISOString(),
             };
+
             try {
+              // Save to Supabase
+              const { data: order, error: orderError } = await supabase
+                .from("orders")
+                .insert({
+                  customer_name: customerName,
+                  phone,
+                  email: null,
+                  total,
+                  gift_message: giftMessage || null,
+                  promo_code: promoCode || null,
+                  status: "pending",
+                })
+                .select()
+                .single();
+
+              if (orderError) throw orderError;
+
+              // Save order items to Supabase
+              if (order) {
+                const orderItems = items.map(({ p, qty }) => ({
+                  order_id: order.id,
+                  product_id: p.id,
+                  product_name: p.name,
+                  price: p.price,
+                  quantity: qty,
+                }));
+
+                const { error: itemsError } = await supabase
+                  .from("order_items")
+                  .insert(orderItems);
+
+                if (itemsError) throw itemsError;
+              }
+
+              // Send to Make.com webhook
               await fetch(WEBHOOK_URL, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(orderData),
               });
             } catch (err) {
-              console.error("Webhook error:", err);
+              console.error("Order error:", err);
             } finally {
               clear();
               setDone(true);
