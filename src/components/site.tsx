@@ -2,6 +2,7 @@ import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ShoppingBag, MapPin, Menu, X, Heart, User } from "lucide-react";
 import { useCart } from "@/lib/cart";
+import { useWishlist } from "@/lib/use-wishlist";
 import { formatINR, type Product } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
 import { useAuth } from "@/lib/use-auth";
@@ -25,6 +26,7 @@ export function Logo() {
 
 export function SiteHeader() {
   const { count } = useCart();
+  const { count: wishlistCount } = useWishlist();
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
@@ -80,8 +82,9 @@ export function SiteHeader() {
                 <Link to="/orders" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
                   Orders
                 </Link>
-                <Link to="/wishlist" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
+                <Link to="/wishlist" className="relative text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
                   Wishlist
+                  {wishlistCount > 0 && <span className="absolute -right-3 -top-2 grid h-4 w-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{wishlistCount}</span>}
                 </Link>
                 <div className="w-px h-5 bg-border hidden md:block"></div>
                 <Link to="/account" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
@@ -110,7 +113,9 @@ export function SiteHeader() {
             user ? (
               <div className="flex flex-col gap-2 pt-2 border-t pt-4">
                 <Link to="/orders" onClick={() => setOpen(false)} className="text-sm">Your Orders</Link>
-                <Link to="/wishlist" onClick={() => setOpen(false)} className="text-sm">Your Wishlist</Link>
+                <Link to="/wishlist" onClick={() => setOpen(false)} className="text-sm relative inline-flex">
+                  Your Wishlist {wishlistCount > 0 && <span className="ml-2 text-xs bg-primary text-primary-foreground px-2 py-0.5 rounded">({wishlistCount})</span>}
+                </Link>
                 <Link to="/account" onClick={() => setOpen(false)} className="text-sm">Account Settings</Link>
               </div>
             ) : (
