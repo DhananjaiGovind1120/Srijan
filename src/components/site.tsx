@@ -72,9 +72,14 @@ export function SiteHeader() {
                 <span className="text-sm hidden md:inline">{user.email?.split("@")[0]}</span>
               </Link>
             ) : (
-              <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Log in
-              </Link>
+              <div className="flex items-center gap-3">
+                <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                  Log in
+                </Link>
+                <Link to="/signup" className="text-sm rounded-sm bg-primary px-3 py-1.5 text-primary-foreground hover:opacity-90 transition-opacity">
+                  Sign up
+                </Link>
+              </div>
             )
           )}
           <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
@@ -87,7 +92,10 @@ export function SiteHeader() {
             user ? (
               <Link to="/account" onClick={() => setOpen(false)}>My Account</Link>
             ) : (
-              <Link to="/login" onClick={() => setOpen(false)}>Log in</Link>
+              <div className="flex flex-col gap-2 pt-2">
+                <Link to="/login" onClick={() => setOpen(false)} className="text-sm">Log in</Link>
+                <Link to="/signup" onClick={() => setOpen(false)} className="text-sm rounded-sm bg-primary px-3 py-1.5 text-primary-foreground text-center">Sign up</Link>
+              </div>
             )
           )}
         </nav>
