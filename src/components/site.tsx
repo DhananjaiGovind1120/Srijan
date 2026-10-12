@@ -67,10 +67,19 @@ export function SiteHeader() {
           </Link>
           {!isLoading && (
             user ? (
-              <Link to="/account" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
-                <User className="h-5 w-5" />
-                <span className="text-sm hidden md:inline">{user.email?.split("@")[0]}</span>
-              </Link>
+              <div className="flex items-center gap-4">
+                <Link to="/orders" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
+                  Orders
+                </Link>
+                <Link to="/wishlist" className="text-sm text-muted-foreground hover:text-foreground transition-colors hidden md:inline">
+                  Wishlist
+                </Link>
+                <div className="w-px h-5 bg-border hidden md:block"></div>
+                <Link to="/account" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                  <User className="h-5 w-5" />
+                  <span className="text-sm hidden md:inline">{user.email?.split("@")[0]}</span>
+                </Link>
+              </div>
             ) : (
               <div className="flex items-center gap-3">
                 <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
@@ -90,7 +99,11 @@ export function SiteHeader() {
           {nav.map((n) => <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>{n.label}</Link>)}
           {!isLoading && (
             user ? (
-              <Link to="/account" onClick={() => setOpen(false)}>My Account</Link>
+              <div className="flex flex-col gap-2 pt-2 border-t pt-4">
+                <Link to="/orders" onClick={() => setOpen(false)} className="text-sm">Your Orders</Link>
+                <Link to="/wishlist" onClick={() => setOpen(false)} className="text-sm">Your Wishlist</Link>
+                <Link to="/account" onClick={() => setOpen(false)} className="text-sm">Account Settings</Link>
+              </div>
             ) : (
               <div className="flex flex-col gap-2 pt-2">
                 <Link to="/login" onClick={() => setOpen(false)} className="text-sm">Log in</Link>
