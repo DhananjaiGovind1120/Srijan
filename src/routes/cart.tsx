@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { useCart } from "@/lib/cart";
+import { useAuth } from "@/lib/use-auth";
 import { getProduct, formatINR } from "@/lib/products";
 import { PageTitle } from "@/components/site";
 import { supabase } from "@/lib/supabase";
@@ -21,6 +22,7 @@ const FREE = 2500;
 
 function Cart() {
   const { lines, setQty, clear } = useCart();
+  const { user } = useAuth();
   const [done, setDone] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const items = lines.map((l) => ({ ...l, p: getProduct(l.id)! })).filter((x) => x.p);
@@ -69,6 +71,7 @@ function Cart() {
                   customer_name: customerName,
                   phone,
                   email: null,
+                  user_id: user?.id || null,
                   total,
                   gift_message: giftMessage || null,
                   promo_code: promoCode || null,

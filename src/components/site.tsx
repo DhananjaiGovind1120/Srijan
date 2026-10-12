@@ -4,6 +4,7 @@ import { ShoppingBag, MapPin, Menu, X, Heart, User } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatINR, type Product } from "@/lib/products";
 import { supabase } from "@/lib/supabase";
+import { useAuth } from "@/lib/use-auth";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -160,14 +161,64 @@ export function SiteFooter() {
 
 export function ProductCard({ p }: { p: Product }) {
   const { add } = useCart();
+  const { user } = useAuth();
   const [liked, setLiked] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!user) {
+      setLiked(false);
+      return;
+    }
+
+    const checkWishlist = async () => {
+      const { data } = await supabase
+        .from("favorites")
+        .select("id")
+        .eq("user_id", user.id)
+        .eq("product_id", p.id);
+      setLiked((data && data.length > 0) || false);
+    };
+
+    checkWishlist();
+  }, [user, p.id]);
+
+  const handleWishlist = async () => {
+    if (!user) {
+      window.location.href = "/login";
+      return;
+    }
+
+    setLoading(true);
+    try {
+      if (liked) {
+        await supabase
+          .from("favorites")
+          .delete()
+          .eq("user_id", user.id)
+          .eq("product_id", p.id);
+        setLiked(false);
+      } else {
+        await supabase.from("favorites").insert({
+          user_id: user.id,
+          product_id: p.id,
+        });
+        setLiked(true);
+      }
+    } catch (err) {
+      console.error("Error updating wishlist:", err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="group">
       <Link to="/product/$id" params={{ id: p.id }} className="relative block aspect-[4/5] overflow-hidden rounded-sm bg-muted">
         <img src={p.image} alt={p.name} loading="lazy" width={1024} height={1280} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110" />
         <span className="absolute left-3 top-3 rounded-sm bg-background/80 px-2 py-0.5 text-[10px] uppercase tracking-widest">{p.occasion}</span>
       </Link>
-      <button onClick={() => setLiked(!liked)} aria-label="Wishlist" className="float-right mt-3"><Heart className={`h-4 w-4 ${liked ? "fill-primary text-primary" : "text-muted-foreground"}`} /></button>
+      <button onClick={handleWishlist} disabled={loading} aria-label="Wishlist" className="float-right mt-3"><Heart className={`h-4 w-4 ${liked ? "fill-primary text-primary" : "text-muted-foreground"}`} /></button>
       <Link to="/product/$id" params={{ id: p.id }}><h3 className="mt-3 text-lg">{p.name}</h3></Link>
       <p className="mt-1 text-sm text-muted-foreground">{p.short}</p>
       <div className="mt-3 flex items-center justify-between">

@@ -30,11 +30,11 @@ function Orders() {
 
     const loadOrders = async () => {
       try {
-
-        // Fetch all orders (in the future, filter by user_id for user-specific orders)
+        // Fetch only orders for the logged-in user
         const { data, error } = await supabase
           .from("orders")
           .select("*")
+          .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
         if (error) throw error;
