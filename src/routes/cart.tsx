@@ -129,6 +129,7 @@ function Cart() {
             setPromoError("");
             const formData = new FormData(e.currentTarget);
             const customerName = formData.get("name") as string;
+            const customerEmail = formData.get("email") as string;
             const phone = formData.get("phone") as string;
             const address = formData.get("address") as string;
             const city = formData.get("city") as string;
@@ -149,7 +150,7 @@ function Cart() {
                 .insert({
                   customer_name: customerName,
                   phone,
-                  email: user?.email || null,
+                  email: customerEmail,
                   user_id: user?.id || null,
                   address,
                   city,
@@ -190,7 +191,7 @@ function Cart() {
                   body: JSON.stringify({
                     order_id: order.id.slice(0, 8),
                     customer_name: customerName,
-                    email: user?.email || "no-email@srijan.com",
+                    email: customerEmail,
                     total: formatINR(total),
                     address: address,
                     city: city,
@@ -252,6 +253,7 @@ function Cart() {
 
           {/* Contact Info */}
           <input required name="name" placeholder="Your name" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
+          <input required name="email" type="email" placeholder="Email address" defaultValue={user?.email || ""} className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
           <input required name="phone" type="tel" placeholder="Phone" className="w-full rounded-sm border bg-transparent px-3 py-2 text-sm" />
 
           {/* Address */}
