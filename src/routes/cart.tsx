@@ -181,6 +181,27 @@ function Cart() {
 
                 if (itemsError) throw itemsError;
               }
+
+              // Send email notification via Make.com webhook
+              try {
+                await fetch("https://hook.eu2.make.com/3gaijlb4owhvfjrsvsle7w414uankvg8", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify({
+                    order_id: order.id.slice(0, 8),
+                    customer_name: customerName,
+                    email: user?.email || "no-email@srijan.com",
+                    total: formatINR(total),
+                    address: address,
+                    city: city,
+                    state: state,
+                    pincode: pincode,
+                  }),
+                });
+              } catch (emailErr) {
+                console.error("Email notification failed:", emailErr);
+                // Don't fail the order if email fails
+              }
             } catch (err) {
               console.error("Order error:", err);
               alert(`Order failed: ${err instanceof Error ? err.message : "Unknown error"}`);
