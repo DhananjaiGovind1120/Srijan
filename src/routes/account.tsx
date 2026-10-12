@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getCurrentUser, signOut } from "@/lib/auth";
+import { signOut } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
 import { supabase } from "@/lib/supabase";
 import { getProduct, formatINR } from "@/lib/products";
 import { Heart } from "lucide-react";
@@ -17,7 +18,7 @@ export const Route = createFileRoute("/account")({
 
 function Account() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const { user, isLoading: authLoading } = useAuth();
   const [tab, setTab] = useState<"orders" | "wishlist">("orders");
   const [orders, setOrders] = useState<any[]>([]);
   const [wishlist, setWishlist] = useState<any[]>([]);
@@ -25,16 +26,15 @@ function Account() {
   const [error, setError] = useState("");
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+
     const loadData = async () => {
       try {
-        // Get current user
-        const currentUser = await getCurrentUser();
-        if (!currentUser) {
-          navigate({ to: "/login" });
-          return;
-        }
-        setUser(currentUser);
-
         // Fetch orders (all orders for now, later we'll filter by user)
         const { data: ordersData, error: ordersError } = await supabase
           .from("orders")
@@ -48,7 +48,7 @@ function Account() {
         const { data: wishlistData, error: wishlistError } = await supabase
           .from("favorites")
           .select("*")
-          .eq("user_id", currentUser.id);
+          .eq("user_id", user.id);
 
         if (wishlistError) throw wishlistError;
         setWishlist(wishlistData || []);
@@ -60,7 +60,7 @@ function Account() {
     };
 
     loadData();
-  }, [navigate]);
+  }, [navigate, user, authLoading]);
 
   const handleLogout = async () => {
     try {
@@ -94,7 +94,7 @@ function Account() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading...</div>;
   }
 

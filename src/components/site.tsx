@@ -1,9 +1,9 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect } from "react";
 import { ShoppingBag, MapPin, Menu, X, Heart, User } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatINR, type Product } from "@/lib/products";
-import { getCurrentUser } from "@/lib/auth";
+import { supabase } from "@/lib/supabase";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -24,24 +24,32 @@ export function Logo() {
 
 export function SiteHeader() {
   const { count } = useCart();
+  const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const [user, setUser] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const checkUser = async () => {
-      try {
-        const currentUser = await getCurrentUser();
-        setUser(currentUser);
-      } catch (err) {
-        setUser(null);
-      } finally {
+    // Listen for auth state changes
+    const { data: authListener } = supabase.auth.onAuthStateChange(
+      async (event, session) => {
+        if (session?.user) {
+          setUser(session.user);
+        } else {
+          setUser(null);
+          // Redirect to home when logging out
+          if (event === "SIGNED_OUT") {
+            navigate({ to: "/" });
+          }
+        }
         setIsLoading(false);
       }
-    };
+    );
 
-    checkUser();
-  }, []);
+    return () => {
+      authListener?.subscription.unsubscribe();
+    };
+  }, [navigate]);
 
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">

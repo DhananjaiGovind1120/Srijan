@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
 import { supabase } from "@/lib/supabase";
 import { formatINR } from "@/lib/products";
 
@@ -16,19 +16,20 @@ export const Route = createFileRoute("/orders")({
 
 function Orders() {
   const navigate = useNavigate();
-  const [user, setUser] = useState<any>(null);
+  const { user, isLoading: authLoading } = useAuth();
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+
     const loadOrders = async () => {
       try {
-        const currentUser = await getCurrentUser();
-        if (!currentUser) {
-          navigate({ to: "/login" });
-          return;
-        }
-        setUser(currentUser);
 
         // Fetch all orders (in the future, filter by user_id for user-specific orders)
         const { data, error } = await supabase
@@ -46,9 +47,9 @@ function Orders() {
     };
 
     loadOrders();
-  }, [navigate]);
+  }, [navigate, user, authLoading]);
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading your orders...</div>;
   }
 

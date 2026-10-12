@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
-import { getCurrentUser } from "@/lib/auth";
+import { useAuth } from "@/lib/use-auth";
 import { supabase } from "@/lib/supabase";
 import { getProduct, formatINR } from "@/lib/products";
 import { Heart, ShoppingBag } from "lucide-react";
@@ -19,25 +19,25 @@ export const Route = createFileRoute("/wishlist")({
 function Wishlist() {
   const navigate = useNavigate();
   const { add } = useCart();
-  const [user, setUser] = useState<any>(null);
+  const { user, isLoading: authLoading } = useAuth();
   const [wishlist, setWishlist] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    if (authLoading) return;
+
+    if (!user) {
+      navigate({ to: "/login" });
+      return;
+    }
+
     const loadWishlist = async () => {
       try {
-        const currentUser = await getCurrentUser();
-        if (!currentUser) {
-          navigate({ to: "/login" });
-          return;
-        }
-        setUser(currentUser);
-
         // Fetch wishlist for user
         const { data, error } = await supabase
           .from("favorites")
           .select("*")
-          .eq("user_id", currentUser.id)
+          .eq("user_id", user.id)
           .order("created_at", { ascending: false });
 
         if (error) throw error;
@@ -50,7 +50,7 @@ function Wishlist() {
     };
 
     loadWishlist();
-  }, [navigate]);
+  }, [navigate, user, authLoading]);
 
   const toggleWishlist = async (productId: string) => {
     if (!user) return;
@@ -67,7 +67,7 @@ function Wishlist() {
     }
   };
 
-  if (loading) {
+  if (authLoading || loading) {
     return <div className="min-h-screen flex items-center justify-center">Loading your wishlist...</div>;
   }
 
