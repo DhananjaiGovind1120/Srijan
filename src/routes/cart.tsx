@@ -97,6 +97,7 @@ function Cart() {
               }
             } catch (err) {
               console.error("Order error:", err);
+              alert(`Order failed: ${err instanceof Error ? err.message : "Unknown error"}`);
             } finally {
               clear();
               setDone(true);
