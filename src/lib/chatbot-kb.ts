@@ -191,5 +191,5 @@ export function getResponse(userMessage: string): string {
     `Thanks for asking! For personalized assistance, call us at **+91 94249 73300**. We love chatting about our products! 💚`,
   ];
 
-  return fallbacks[Math.floor(Math.random() * fallbacks.length)];
+  return fallbacks[Math.floor(Math.random() * fallbacks.length)]!;
 }
