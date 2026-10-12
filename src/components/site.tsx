@@ -1,8 +1,9 @@
 import { Link } from "@tanstack/react-router";
-import { useState } from "react";
-import { ShoppingBag, MapPin, Menu, X, Heart } from "lucide-react";
+import { useState, useEffect } from "react";
+import { ShoppingBag, MapPin, Menu, X, Heart, User } from "lucide-react";
 import { useCart } from "@/lib/cart";
 import { formatINR, type Product } from "@/lib/products";
+import { getCurrentUser } from "@/lib/auth";
 
 const nav = [
   { to: "/", label: "Home" },
@@ -24,6 +25,24 @@ export function Logo() {
 export function SiteHeader() {
   const { count } = useCart();
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const checkUser = async () => {
+      try {
+        const currentUser = await getCurrentUser();
+        setUser(currentUser);
+      } catch (err) {
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkUser();
+  }, []);
+
   return (
     <header className="sticky top-0 z-40 border-b bg-background/90 backdrop-blur">
       <div className="bg-cream text-cream-foreground">
@@ -46,12 +65,31 @@ export function SiteHeader() {
             <ShoppingBag className="h-5 w-5" />
             {count > 0 && <span className="absolute -right-2 -top-2 grid h-4 w-4 place-items-center rounded-full bg-primary text-[10px] font-semibold text-primary-foreground">{count}</span>}
           </Link>
+          {!isLoading && (
+            user ? (
+              <Link to="/account" className="flex items-center gap-2 text-muted-foreground hover:text-foreground transition-colors">
+                <User className="h-5 w-5" />
+                <span className="text-sm hidden md:inline">{user.email?.split("@")[0]}</span>
+              </Link>
+            ) : (
+              <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
+                Log in
+              </Link>
+            )
+          )}
           <button className="md:hidden" onClick={() => setOpen(!open)} aria-label="Menu">{open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}</button>
         </div>
       </div>
       {open && (
         <nav className="flex flex-col gap-4 border-t px-6 py-4 md:hidden">
           {nav.map((n) => <Link key={n.to} to={n.to} onClick={() => setOpen(false)}>{n.label}</Link>)}
+          {!isLoading && (
+            user ? (
+              <Link to="/account" onClick={() => setOpen(false)}>My Account</Link>
+            ) : (
+              <Link to="/login" onClick={() => setOpen(false)}>Log in</Link>
+            )
+          )}
         </nav>
       )}
     </header>
