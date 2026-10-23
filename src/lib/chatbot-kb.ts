@@ -73,7 +73,7 @@ Visit our Custom Orders page or contact us for details!`,
     {
       keywords: ["international", "abroad", "outside india"],
       response: () =>
-        `Yes, we ship worldwide! International shipping times and costs vary by location. Please contact us at **+91 94249 73300** or email **vandansaingh@gmail.com** for international orders.`,
+        `Yes, we ship worldwide! International shipping times and costs vary by location. Please contact us at **+91 94249 73300** or email **vandansingh@gmail.com** for international orders.`,
     },
   ],
 
@@ -108,7 +108,7 @@ We'll confirm payment when you place your order!`,
         `Get in touch with us:
 📍 **Store**: E7/139, Arera Colony, Above Nxt Level Gym, Bhopal, MP
 📞 **Phone**: +91 94249 73300
-📧 **Email**: vandansaingh@gmail.com
+📧 **Email**: vandansingh@gmail.com
 📲 **Instagram**: @srijancreation.bpl
 
 We're here to help!`,

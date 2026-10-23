@@ -156,7 +156,7 @@ export function SiteFooter() {
           <p className="mb-3 text-foreground">Visit</p>
           <p>E7/139, Arera Colony, Above Nxt Level Gym, Bhopal, MP</p>
           <p>+91 94249 73300</p>
-          <p>vandansaingh@gmail.com</p>
+          <p>vandansingh@gmail.com</p>
         </div>
       </div>
       <p className="pb-8 text-center text-xs text-muted-foreground">© {new Date().getFullYear()} Srijan, Bhopal. Handcrafted with love. Shipping across India & worldwide.</p>
