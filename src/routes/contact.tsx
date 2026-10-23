@@ -22,7 +22,7 @@ function Contact() {
           <div><p className="text-xs uppercase tracking-widest text-primary">Address</p><p className="mt-2 text-xl">E7/139, Arera Colony, Above Nxt Level Gym, Bhopal, Madhya Pradesh</p></div>
           <div><p className="text-xs uppercase tracking-widest text-primary">Hours</p><p className="mt-2 text-xl">Mon–Sat, 11am – 8pm</p></div>
           <div><p className="text-xs uppercase tracking-widest text-primary">Phone</p><a href="tel:+919424973300" className="mt-2 block text-xl">+91 94249 73300</a></div>
-          <div><p className="text-xs uppercase tracking-widest text-primary">Email</p><a href="mailto:vandansaingh@gmail.com" className="mt-2 block text-xl">vandansaingh@gmail.com</a></div>
+          <div><p className="text-xs uppercase tracking-widest text-primary">Email</p><a href="mailto:vandansingh@gmail.com" className="mt-2 block text-xl">vandansingh@gmail.com</a></div>
           <a href="https://maps.google.com/?q=E7/139+Arera+Colony+Bhopal" target="_blank" rel="noreferrer" className="inline-flex rounded-sm bg-primary px-6 py-3 text-sm font-medium text-primary-foreground">Get directions</a>
         </div>
         <iframe
