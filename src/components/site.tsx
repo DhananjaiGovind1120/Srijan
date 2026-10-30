@@ -169,6 +169,7 @@ export function ProductCard({ p }: { p: Product }) {
   const { user } = useAuth();
   const [liked, setLiked] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [selectedSize, setSelectedSize] = useState<string | null>(p.sizes ? p.sizes[0] || null : null);
 
   useEffect(() => {
     if (!user) {
@@ -226,9 +227,24 @@ export function ProductCard({ p }: { p: Product }) {
       <button onClick={handleWishlist} disabled={loading} aria-label="Wishlist" className="float-right mt-3"><Heart className={`h-4 w-4 ${liked ? "fill-primary text-primary" : "text-muted-foreground"}`} /></button>
       <Link to="/product/$id" params={{ id: p.id }}><h3 className="mt-3 text-lg">{p.name}</h3></Link>
       <p className="mt-1 text-sm text-muted-foreground">{p.short}</p>
+      {p.sizes && (
+        <div className="mt-3 flex gap-2">
+          {p.sizes.map((size) => (
+            <button
+              key={size}
+              onClick={() => setSelectedSize(size)}
+              className={`rounded-sm border px-2 py-1 text-xs font-medium transition-colors ${
+                selectedSize === size ? "border-primary bg-primary text-primary-foreground" : "border-muted hover:border-primary"
+              }`}
+            >
+              {size}
+            </button>
+          ))}
+        </div>
+      )}
       <div className="mt-3 flex items-center justify-between">
         <span className="font-medium">{formatINR(p.price)}</span>
-        <button onClick={() => add(p.id)} className="text-xs uppercase tracking-widest text-primary hover:underline">+ Add to bag</button>
+        <button onClick={() => add(p.id, selectedSize || undefined)} className="text-xs uppercase tracking-widest text-primary hover:underline">+ Add to bag</button>
       </div>
     </div>
   );

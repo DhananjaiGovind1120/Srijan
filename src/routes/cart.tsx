@@ -105,16 +105,17 @@ function Cart() {
       <div className="mx-auto grid max-w-7xl gap-12 px-6 py-12 md:grid-cols-[2fr_1fr]">
         <div className="divide-y">
           {items.length === 0 && <p className="py-10 font-hand text-2xl text-muted-foreground">Your bag is empty. <Link to="/shop" className="text-primary">Start exploring →</Link></p>}
-          {items.map(({ p, qty }) => (
-            <div key={p.id} className="flex gap-5 py-6">
+          {items.map(({ p, qty, size }) => (
+            <div key={`${p.id}-${size || 'no-size'}`} className="flex gap-5 py-6">
               <img src={p.image} alt={p.name} className="h-28 w-24 rounded-sm object-cover" />
               <div className="flex-1">
                 <h3 className="text-lg">{p.name}</h3>
+                {size && <p className="text-sm text-muted-foreground">Size: <span className="font-medium">{size}</span></p>}
                 <p className="text-sm text-muted-foreground">{formatINR(p.price)}</p>
                 <div className="mt-3 flex items-center gap-3 text-sm">
-                  <button onClick={() => setQty(p.id, qty - 1)} className="h-7 w-7 rounded-sm border">−</button>
+                  <button onClick={() => setQty(p.id, qty - 1, size)} className="h-7 w-7 rounded-sm border">−</button>
                   {qty}
-                  <button onClick={() => setQty(p.id, qty + 1)} className="h-7 w-7 rounded-sm border">+</button>
+                  <button onClick={() => setQty(p.id, qty + 1, size)} className="h-7 w-7 rounded-sm border">+</button>
                 </div>
               </div>
               <p>{formatINR(p.price * qty)}</p>
