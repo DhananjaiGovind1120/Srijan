@@ -73,7 +73,7 @@ function Home() {
       </section>
 
       <section className="mx-auto max-w-7xl px-6 py-24">
-        <h2 className="text-4xl md:text-5xl">Three collections, one home</h2>
+        <h2 className="text-4xl md:text-5xl">Curated Just For You</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {[
             { k: "clothing", t: "Clothing", d: "Festival sarees, kurtas & custom pieces", img: images.clothing, c: "bg-primary" },
