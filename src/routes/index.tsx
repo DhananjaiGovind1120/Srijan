@@ -3,6 +3,10 @@ import { useEffect, useState } from "react";
 import { images, products } from "@/lib/products";
 import { ProductCard } from "@/components/site";
 
+// Get clothing and jewelry products for carousel
+const clothingProducts = products.filter(p => p.category === "clothing");
+const jewelryProducts = products.filter(p => p.category === "jewellery");
+
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
@@ -16,8 +20,8 @@ export const Route = createFileRoute("/")({
 });
 
 const slides = [
-  { img: images.hero, label: "Clothing", line: "Handcrafted pieces for every occasion" },
-  { img: images.jewellery, label: "Jewellery", line: "Artisan designs, made by hand" },
+  ...clothingProducts.map(p => ({ img: p.image, label: "Clothing", line: p.short })),
+  ...jewelryProducts.map(p => ({ img: p.image, label: "Jewellery", line: p.short })),
 ];
 
 const festivals = [
