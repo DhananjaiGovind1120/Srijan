@@ -6,25 +6,24 @@ import { ProductCard } from "@/components/site";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Srijan — Handcrafted Clothing, Jewellery & Coffee | Bhopal" },
-      { name: "description", content: "Handloom sarees, artisan jewellery and curated Indian coffee from our boutique in Arera Colony, Bhopal." },
+      { title: "Srijan — Handcrafted Clothing & Jewellery | Bhopal" },
+      { name: "description", content: "Handcrafted clothing and jewellery from our boutique in Arera Colony, Bhopal." },
       { property: "og:title", content: "Srijan — Handcrafted | Curated | Connected" },
-      { property: "og:description", content: "A Bhopal boutique for handloom sarees, artisan jewellery and Indian coffee." },
+      { property: "og:description", content: "A Bhopal boutique for handcrafted clothing and jewellery." },
     ],
   }),
   component: Home,
 });
 
 const slides = [
-  { img: images.hero, label: "Clothing", line: "Handloom sarees for every celebration" },
-  { img: images.jewellery, label: "Jewellery", line: "Oxidised silver, made by hand" },
-  { img: images.coffee, label: "Coffee", line: "Single-origin Indian roasts" },
+  { img: images.hero, label: "Clothing", line: "Handcrafted pieces for every occasion" },
+  { img: images.jewellery, label: "Jewellery", line: "Artisan designs, made by hand" },
 ];
 
 const festivals = [
-  { name: "Diwali", note: "Light, gold & new beginnings", text: "Cotton-silk sarees, temple jewellery and gift boxes packed with a handwritten note." },
-  { name: "Rakhi", note: "For the ones who've always had your back", text: "Coffee & jhumka hampers that ship anywhere in India." },
-  { name: "Weddings", note: "Made just for you", text: "Bridal sets and made-to-measure outfits, planned over a cup of coffee." },
+  { name: "Diwali", note: "Light, gold & new beginnings", text: "Handcrafted clothing, temple jewellery and gift boxes packed with a handwritten note." },
+  { name: "Rakhi", note: "For the ones who've always had your back", text: "Handcrafted jewellery pieces that ship anywhere in India." },
+  { name: "Weddings", note: "Made just for you", text: "Bridal sets and handcrafted outfits, customized for your special day." },
 ];
 
 function Home() {
@@ -46,7 +45,7 @@ function Home() {
               Made by hand, <em className="text-copper">worn</em> with heart.
             </h1>
             <p className="mt-6 max-w-md text-muted-foreground">
-              A little boutique in Bhopal bringing together handloom clothing, artisan jewellery and the coffee we brew while we make them.
+              A little boutique in Bhopal bringing together handcrafted clothing and artisan jewellery, made with love.
             </p>
             <Link to="/shop" className="mt-10 inline-flex rounded-sm bg-primary px-7 py-3.5 text-sm font-medium text-primary-foreground transition-transform hover:-translate-y-0.5">
               Explore Our Collections
@@ -71,11 +70,10 @@ function Home() {
 
       <section className="mx-auto max-w-7xl px-6 py-24">
         <h2 className="text-4xl md:text-5xl">Three collections, one home</h2>
-        <div className="mt-12 grid gap-6 md:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2">
           {[
-            { k: "clothing", t: "Clothing", d: "Summer cottons, festival sarees & custom apparel", img: images.clothing, c: "bg-primary" },
-            { k: "jewellery", t: "Jewellery", d: "Daily wear, festival & bridal — crafted by hand", img: images.jewellery, c: "bg-sage" },
-            { k: "coffee", t: "Coffee", d: "Origin stories, brewing guides & gift boxes", img: images.coffee, c: "bg-indigo" },
+            { k: "clothing", t: "Clothing", d: "Festival sarees, kurtas & custom pieces", img: images.hero, c: "bg-primary" },
+            { k: "jewellery", t: "Jewellery", d: "Artisan designs for every occasion", img: images.jewellery, c: "bg-sage" },
           ].map((c) => (
             <Link key={c.k} to="/shop" search={{ c: c.k as "clothing" }} className="group relative aspect-[3/4] overflow-hidden rounded-sm">
               <img src={c.img} alt={c.t} loading="lazy" width={1024} height={1280} className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" />
@@ -116,7 +114,7 @@ function Home() {
           <Link to="/shop" className="text-sm text-primary">View all →</Link>
         </div>
         <div className="mt-10 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-          {[products[0]!, products[3]!, products[6]!].map((p) => <ProductCard key={p.id} p={p} />)}
+          {products.slice(0, 3).map((p) => <ProductCard key={p.id} p={p} />)}
         </div>
       </section>
     </>
