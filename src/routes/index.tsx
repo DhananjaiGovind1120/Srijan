@@ -72,7 +72,7 @@ function Home() {
         <h2 className="text-4xl md:text-5xl">Three collections, one home</h2>
         <div className="mt-12 grid gap-6 md:grid-cols-2">
           {[
-            { k: "clothing", t: "Clothing", d: "Festival sarees, kurtas & custom pieces", img: images.hero, c: "bg-primary" },
+            { k: "clothing", t: "Clothing", d: "Festival sarees, kurtas & custom pieces", img: images.clothing, c: "bg-primary" },
             { k: "jewellery", t: "Jewellery", d: "Artisan designs for every occasion", img: images.jewellery, c: "bg-sage" },
           ].map((c) => (
             <Link key={c.k} to="/shop" search={{ c: c.k as "clothing" }} className="group relative aspect-[3/4] overflow-hidden rounded-sm">

@@ -21,7 +21,7 @@ export interface Product {
   sizes?: Size[];
 }
 
-export const images = { hero, jewellery: regalChoker };
+export const images = { hero, clothing: indigoBlossm, jewellery: regalChoker };
 
 export const products: Product[] = [
   { id: "gulmohar-bloom", name: "Gulmohar Bloom Kurta", category: "clothing", price: 2100, occasion: "Festival", image: gulmoharbBloom, short: "Mustard florals, crimson blooms and golden embroidery for festive dressing.", details: ["Mustard base with crimson floral print", "Golden embroidery details", "Perfect for festivals and celebrations", "Comfortable fit for all-day wear"], note: "A vibrant celebration of traditional Indian design.", sizes: ["XS", "S", "M", "L", "XL"] },
