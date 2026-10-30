@@ -8,14 +8,14 @@ type Search = { c?: Category };
 export const Route = createFileRoute("/shop")({
   validateSearch: (s: Record<string, unknown>): Search => {
     const c = s["c"] as string;
-    return c === "clothing" || c === "jewellery" || c === "coffee" ? { c } : {};
+    return c === "clothing" || c === "jewellery" ? { c } : {};
   },
   head: () => ({
     meta: [
       { title: "Shop Collections — Srijan Bhopal" },
-      { name: "description", content: "Browse handloom sarees, handcrafted jewellery and Indian specialty coffee." },
+      { name: "description", content: "Browse handcrafted clothing and jewellery." },
       { property: "og:title", content: "Shop Srijan Collections" },
-      { property: "og:description", content: "Clothing, jewellery and coffee, handpicked in Bhopal." },
+      { property: "og:description", content: "Handcrafted clothing and jewellery, curated in Bhopal." },
     ],
   }),
   component: Shop,
@@ -30,7 +30,7 @@ function Shop() {
   if (sort === "low") list = [...list].sort((a, b) => a.price - b.price);
   if (sort === "high") list = [...list].sort((a, b) => b.price - a.price);
   const occasions = ["All", ...new Set(products.map((p) => p.occasion))];
-  const tabs: { k?: Category; l: string }[] = [{ l: "All" }, { k: "clothing", l: "Clothing" }, { k: "jewellery", l: "Jewellery" }, { k: "coffee", l: "Coffee" }];
+  const tabs: { k?: Category; l: string }[] = [{ l: "All" }, { k: "clothing", l: "Clothing" }, { k: "jewellery", l: "Jewellery" }];
 
   return (
     <>
